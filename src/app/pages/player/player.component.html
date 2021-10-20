@@ -1,0 +1,160 @@
+<mat-card>
+
+    <mat-card-header>
+
+            <!--Authentication UI -->
+
+
+
+    <mat-card-title>
+            
+        <mat-icon>music_note</mat-icon>
+        
+        Audio Player
+        
+    </mat-card-title>
+
+</mat-card-header>
+
+        <mat-toolbar color= "primary" class="main-toolbar">
+
+        <mat-toolbar-row>
+
+            <span class="spacer"></span>
+
+            <button mat-fab *ngIf="!auth.authenticated" (click)="auth.login()">LOGIN</button>
+
+            <button mat-fab *ngIf="auth.authenticated" (click)="auth.logout()">LOGOUT</button>
+
+            <span class="spacer"></span>
+
+            <mat-icon mat-list-icon>favorite</mat-icon>
+            
+            <span class="spacer"></span>
+
+            <mat-icon mat-list-icon>share</mat-icon>
+            
+            <span class="spacer"></span>
+
+            <mat-icon mat-list-icon>turned_in</mat-icon>
+            
+            <span class="spacer"></span>
+
+            <mat-icon mat-list-icon>highlight_off</mat-icon>
+            
+            <span class="spacer"></span>
+
+            <button mat-fab *ngIf="auth.authenticated" routerLink="/profile">PROFILE</button>
+
+            <span class="spacer"></span>
+
+        </mat-toolbar-row>
+
+        </mat-toolbar>
+
+
+
+    <img mat-card-image [src]="">
+
+    <mat-card-content>
+
+        <!-- *ngIf="auth.authenticated" hides playlist if user is not logged in -->
+        <mat-list color="primary" *ngIf="auth.authenticated">
+
+            <h3 mat-subheader>Songs</h3>
+
+            <mat-list-item *ngFor="let track of tracks; let i = index" (click)="playTrack(track, i)">
+
+                <mat-icon color="accent" mat-list-icon>music_note</mat-icon>
+
+                <h4 mat-line>{{ track.name }}</h4>
+
+                <h5 mat-line>{{ track.artist }}</h5>
+
+                <mat-icon color="primary" *ngIf="currentTrack.index === i && !state?.error">volume_up</mat-icon>
+
+                <h6 *ngIf="currentTrack.index === i && state?.error">ERROR</h6>
+
+                <mat-divider></mat-divider>
+
+            </mat-list-item>
+
+        </mat-list>
+        
+
+    </mat-card-content>
+    
+    <mat-card-footer>
+
+        <mat-card-actions>
+
+            <mat-toolbar color="primary">
+                <mat-toolbar-row>
+    
+                    {{ state?.readableCurrentTime }}
+    
+                <mat-slider 
+                    class="time-slider" 
+                    min="0" 
+                    [max]="state?.duration" 
+                    step="1" 
+                    [value]="state?.currentTime" 
+                    (input)="onSliderChangeEnd($event)"
+                    [disabled]="state?.error || currentTrack.index === undefined">
+                </mat-slider>
+    
+                    {{ state?.readableDuration }}
+    
+                </mat-toolbar-row>
+    
+                <mat-toolbar-row class="media-action-bar">
+    
+                    <button 
+                    mat-button 
+                    [disabled]="isFirstPlaying()" 
+                    (click)="previous()">
+                    
+                    <mat-icon mat-list-icon>    skip_previous   </mat-icon>
+    
+                    </button>
+    
+                    <button 
+                    mat-button 
+                    (click)="play()"
+                    [disabled]="state?.error"
+                    *ngIf="!state?.playing">
+                
+                    <mat-icon mat-list-icon>    play_circle_filled  </mat-icon>
+                
+                    </button>
+    
+                    <button
+                    mat-button
+                    (click)="pause()"
+                    *ngIf="state?.playing">
+    
+                    <mat-icon mat-list-icon>    pause   </mat-icon>
+    
+                    </button>
+    
+                    <button
+                    mat-button
+                    [disabled]="isLastPlaying()"
+                    (click)="next()">
+    
+                    <mat-icon mat-list-icon>    skip_next   </mat-icon>
+    
+                    </button>
+    
+                </mat-toolbar-row>
+                
+            </mat-toolbar>
+    
+        </mat-card-actions>
+
+    </mat-card-footer>
+
+</mat-card>
+
+
+

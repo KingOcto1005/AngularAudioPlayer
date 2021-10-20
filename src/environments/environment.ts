@@ -3,8 +3,23 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+
+  auth0: {
+
+    clientID: '9QhgjldLgUWCAt1YnR9p00FyswKbBHGg',
+  
+    domain: 'dev-65ynyim5.us.auth0.com',
+  
+    redirectUri: 'http://localhost:4200',
+  
+    logoutUrl: 'http://localhost:4200'
+    
+}
+
 };
+
+
 
 /*
  * For easier debugging in development mode, you can import the following file
