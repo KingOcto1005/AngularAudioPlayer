@@ -11,6 +11,8 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class PlayerComponent implements OnInit {
 
+  track: any;
+
   tracks: Array<any> = [];
 
   state!: StreamState;
@@ -58,6 +60,14 @@ export class PlayerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  searchSong(value: string) {
+
+    this.audioService.getTrackList(value).subscribe(track =>{
+
+      this.track = track;
+    })
   }
 
   //fires playStream() function from AudioService to start observables and audio playback

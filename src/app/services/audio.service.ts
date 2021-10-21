@@ -8,6 +8,13 @@ import * as moment from 'moment';
 
 //"StreamState" interface
 import { StreamState } from '../interfaces/stream-state';
+import { HttpClient } from '@angular/common/http';
+
+import { TrackList, Track } from '../interfaces/track'
+
+import { publishReplay, refCount } from 'rxjs/operators';
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +26,11 @@ export class AudioService {
 
   //HTMLAudioElement that emits media events to listen to
   private audioObj = new Audio();
+
+  itunesUrl = 'https://itunes.apple.com/search';
+
+
+  trackList = new Observable<TrackList[]>();
 
   audioEvents = [
     'ended',
@@ -106,7 +118,21 @@ export class AudioService {
 
   }
 
-  constructor() {}
+  constructor(private httpClient: HttpClient) { }
+
+  getTrackList(queryString: string): Observable<TrackList[]> {
+
+    if (!this.trackList) {
+
+      this.trackList = this.httpClient.get<TrackList[]>(`${this.itunesUrl}?term=${queryString}`).pipe(publishReplay(1),
+      refCount()
+      );
+    }
+    return this.trackList;
+    
+  }
+
+
 
   //PLAYBACK CONTROLS SECTION
 
@@ -244,5 +270,11 @@ export class AudioService {
 
     return this.stateChange.asObservable(); 
 
+  }
+
+  clearCache() {
+
+    this.trackList = null as any;
+    
   }
 }
